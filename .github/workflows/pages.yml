@@ -3,9 +3,15 @@ name: Atualizar painel do portfólio
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '23 9 1 * *'
+      timezone: America/Sao_Paulo
   workflow_dispatch:
 
 permissions: {}
+
+env:
+  TZ: America/Sao_Paulo
 
 concurrency:
   group: github-pages
@@ -23,8 +29,10 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
-      - name: Recalcular os três cases
-        run: python3 build_data.py
+      - name: Validar a série e gerar os cases disponíveis
+        run: |
+          python3 novos_cases.py
+          python3 build_data.py
       - name: Validar o painel
         run: |
           node --check site/app.js

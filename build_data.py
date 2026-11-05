@@ -3,8 +3,10 @@
 import json
 import sqlite3
 from contextlib import closing
+from datetime import date
 from pathlib import Path
 
+from novos_cases import released_cases
 
 ROOT = Path(__file__).resolve().parent
 SQL = ROOT / "sql"
@@ -31,7 +33,7 @@ def validate_capacity(rows):
         previous_closing = row["closing_queue"]
 
 
-def build_data():
+def build_data(as_of=None):
     data = {"synthetic": True}
     with closing(sqlite3.connect(":memory:")) as connection:
         connection.execute("PRAGMA foreign_keys = ON")
@@ -43,6 +45,7 @@ def build_data():
             if not data[case]:
                 raise ValueError(f"A consulta {filename} não retornou dados.")
         validate_capacity(data["capacity"])
+    data["new_cases"] = released_cases(as_of if as_of is not None else date.today())
     return data
 
 

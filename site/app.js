@@ -4,6 +4,9 @@ const number = new Intl.NumberFormat("pt-BR");
 const dateLabel = new Intl.DateTimeFormat("pt-BR", {
   day: "2-digit", month: "2-digit", timeZone: "UTC",
 });
+const monthLabel = new Intl.DateTimeFormat("pt-BR", {
+  month: "long", year: "numeric", timeZone: "UTC",
+});
 const svgNamespace = "http://www.w3.org/2000/svg";
 
 function stats(id, entries) {
@@ -20,8 +23,7 @@ function stats(id, entries) {
   }
 }
 
-function table(id, rows) {
-  const body = document.querySelector("#" + id + " tbody");
+function tableRows(body, rows) {
   for (const values of rows) {
     const row = body.insertRow();
     values.forEach((value, index) => {
@@ -126,7 +128,7 @@ function capacityCase(rows) {
     ["Concluídas na semana", total("completed")],
     ["Fila ao fechar a semana", closing, true],
   ]);
-  table("capacity-table", rows.map(row => [
+  tableRows(document.querySelector("#capacity-table tbody"), rows.map(row => [
     row.day, row.opening_queue, row.arrivals, row.capacity, row.completed,
     row.closing_queue, row.unused_capacity,
   ]));
@@ -143,7 +145,9 @@ function capacityCase(rows) {
 function grainCase(rows) {
   const joined = rows.reduce((sum, row) => sum + row.joined_rows, 0);
   stats("grain-stats", [["Ordens distintas", rows.length, true], ["Linhas após LEFT JOIN", joined]]);
-  table("grain-table", rows.map(row => [row.order_id, row.events, row.joined_rows]));
+  tableRows(document.querySelector("#grain-table tbody"), rows.map(row => [
+    row.order_id, row.events, row.joined_rows,
+  ]));
 }
 
 function cutoffCase(rows) {
@@ -152,9 +156,69 @@ function cutoffCase(rows) {
     ["Até o mesmo corte", sequence("count_at_cutoff"), true],
     ["No dia inteiro", sequence("daily_total")],
   ]);
-  table("cutoff-table", rows.map(row => [
+  tableRows(document.querySelector("#cutoff-table tbody"), rows.map(row => [
     dateLabel.format(new Date(row.day + "T00:00:00Z")), row.cutoff, row.count_at_cutoff, row.daily_total,
   ]));
+}
+
+function caseCard(study) {
+  const article = document.createElement("article");
+  article.className = "case-card series-card";
+
+  const header = document.createElement("header");
+  header.className = "case-header";
+  const eyebrow = document.createElement("p");
+  eyebrow.className = "eyebrow";
+  const month = document.createElement("time");
+  month.dateTime = study.date;
+  month.textContent = monthLabel.format(new Date(study.date + "T00:00:00Z"));
+  eyebrow.append(study.topic.toLocaleUpperCase("pt-BR") + " · ", month);
+  const heading = document.createElement("h3");
+  heading.textContent = study.title;
+  const question = document.createElement("p");
+  question.textContent = study.question;
+  header.append(eyebrow, heading, question);
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-wrap";
+  wrapper.tabIndex = 0;
+  wrapper.setAttribute("role", "region");
+  wrapper.setAttribute("aria-label", "Resultados de " + study.title);
+  const result = document.createElement("table");
+  const caption = result.createCaption();
+  caption.className = "sr-only";
+  caption.textContent = "Resultados do estudo: " + study.title;
+  const labels = result.createTHead().insertRow();
+  for (const column of study.columns) {
+    const label = document.createElement("th");
+    label.scope = "col";
+    label.textContent = column.label;
+    labels.append(label);
+  }
+  tableRows(result.createTBody(), study.rows.map(row => study.columns.map(column => row[column.key])));
+  wrapper.append(result);
+
+  const interpretation = document.createElement("p");
+  interpretation.className = "method";
+  interpretation.textContent = study.interpretation;
+  article.append(header, wrapper, interpretation);
+
+  if (/^sql\/novos\/[a-z0-9_-]+\.sql$/.test(study.sql)) {
+    const link = document.createElement("a");
+    link.className = "code-link";
+    link.href = "https://github.com/russoaugusto/portfolio-dados-operacionais/blob/main/" + study.sql;
+    link.textContent = "Ler a consulta SQL";
+    link.setAttribute("aria-label", "Ler a consulta SQL de " + study.title);
+    article.append(link);
+  }
+  return article;
+}
+
+function seriesCase(studies) {
+  const container = document.getElementById("series-cases");
+  const ordered = [...studies].sort((left, right) => right.date.localeCompare(left.date));
+  container.replaceChildren(...ordered.map(caseCard));
+  document.getElementById("series-empty").hidden = ordered.length > 0;
 }
 
 async function load() {
@@ -171,6 +235,7 @@ async function load() {
     capacityCase(data.capacity);
     grainCase(data.grain);
     cutoffCase(data.cutoff);
+    seriesCase(data.new_cases ?? []);
     status.hidden = true;
   } catch {
     regions.forEach(region => { region.hidden = true; });

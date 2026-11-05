@@ -131,6 +131,12 @@ tbody tr:last-child > * { border-bottom: 0; }
 .compact-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .compact-stats .stat { padding: .7rem .75rem; }
 .compact-stats dd { font-size: clamp(1.25rem, 2.4vw, 1.65rem); }
+.case-series { margin-top: 2.7rem; }
+.series-cases { display: grid; gap: 1rem; }
+.series-card { min-width: 0; }
+.series-card time { color: var(--muted); letter-spacing: 0; text-transform: none; }
+.series-card .table-wrap { border: 1px solid var(--line); border-radius: .45rem; }
+.series-card .table-wrap:focus-visible { outline: 3px solid #247c91; outline-offset: 3px; }
 .site-footer { border-top: 1px solid var(--line); background: var(--card); font-size: .9rem; }
 .footer-inner { padding-block: 1.2rem; }
 .footer-inner p { color: var(--muted); }
