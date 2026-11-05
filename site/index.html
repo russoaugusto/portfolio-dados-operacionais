@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Portfólio de @russoaugusto com três estudos reproduzíveis de SQL, BI e planejamento operacional.">
+  <meta name="color-scheme" content="light">
+  <title>@russoaugusto · Portfólio de Dados</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="wordmark" href="#inicio" aria-label="@russoaugusto, início"><span aria-hidden="true">SQL</span> @russoaugusto</a>
+      <nav aria-label="Estudos do portfólio">
+        <a href="#capacidade">Capacidade</a>
+        <a href="#sql">SQL</a>
+        <a href="#bi">BI</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero" id="inicio" aria-labelledby="titulo">
+      <div class="shell hero-inner">
+        <p class="eyebrow">PORTFÓLIO DE DADOS <span aria-hidden="true">/</span> 03 ESTUDOS</p>
+        <h1 id="titulo">Do dado à decisão operacional</h1>
+        <p class="hero-summary">Três estudos reproduzíveis de planejamento, SQL e BI. Cada caso parte de uma pergunta e mostra como os dados ajudam a respondê-la.</p>
+        <div class="hero-actions">
+          <a class="primary-link" href="#capacidade">Explorar o painel <span aria-hidden="true">↓</span></a>
+          <span class="synthetic">Dados fictícios</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="shell content">
+      <p id="data-status" class="status" role="status">Carregando os resultados dos estudos…</p>
+      <noscript><p class="status">Ative o JavaScript para carregar os gráficos e as tabelas.</p></noscript>
+
+      <section class="case" id="capacidade" aria-labelledby="capacidade-titulo">
+        <header class="case-header">
+          <p class="eyebrow"><span class="case-number">01</span> PLANEJAMENTO OPERACIONAL</p>
+          <h2 id="capacidade-titulo">Por que a semana termina com fila?</h2>
+          <p>Compare a demanda e a capacidade a cada dia e acompanhe o saldo que passa para o dia seguinte.</p>
+        </header>
+
+        <div class="data-region" hidden>
+          <dl class="stats" id="capacity-stats"></dl>
+          <figure class="figure-panel" aria-labelledby="cap-chart-title">
+            <div class="figure-head">
+              <div>
+                <h3 id="cap-chart-title">Demanda, capacidade e fila por dia</h3>
+                <p>Solicitações, de segunda a sexta</p>
+              </div>
+              <ul class="legend" aria-label="Legenda">
+                <li><i class="key-arrivals"></i> Demanda</li>
+                <li><i class="key-capacity"></i> Capacidade</li>
+                <li><i class="key-queue"></i> Fila ao fim do dia</li>
+              </ul>
+            </div>
+            <div class="plot" id="capacity-chart"></div>
+            <figcaption id="capacity-finding"></figcaption>
+          </figure>
+          <details class="table-panel">
+            <summary>Conferir os valores por dia</summary>
+            <div class="table-wrap">
+              <table id="capacity-table">
+                <caption class="sr-only">Movimentação diária das solicitações</caption>
+                <thead><tr><th scope="col">Dia</th><th scope="col">Fila inicial</th><th scope="col">Demanda</th><th scope="col">Capacidade</th><th scope="col">Concluídas</th><th scope="col">Fila final</th><th scope="col">Capacidade ociosa</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+        <p class="method"><strong>Método.</strong> Em cada dia, a equipe conclui até o limite da capacidade entre as solicitações que chegaram e as que já estavam na fila. O saldo segue para o dia seguinte.</p>
+        <a class="code-link" href="https://github.com/russoaugusto/portfolio-dados-operacionais/blob/main/sql/capacidade.sql">Ler a consulta de capacidade <span aria-hidden="true">↗</span></a>
+      </section>
+
+      <div class="case-grid">
+        <section class="case case-card" id="sql" aria-labelledby="sql-titulo">
+          <header class="case-header">
+            <p class="eyebrow"><span class="case-number">02</span> SQL</p>
+            <h2 id="sql-titulo">O que o JOIN está contando?</h2>
+            <p>Uma ordem pode ter vários eventos. Ao juntar as tabelas, uma mesma ordem pode aparecer mais de uma vez.</p>
+          </header>
+          <div class="data-region" hidden>
+            <dl class="stats compact-stats" id="grain-stats"></dl>
+            <div class="table-wrap">
+              <table id="grain-table">
+                <caption class="sr-only">Granularidade de ordens e eventos</caption>
+                <thead><tr><th scope="col">Ordem</th><th scope="col">Eventos</th><th scope="col">Linhas após JOIN</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <p class="method"><strong>Método.</strong> Conte os eventos por ordem antes de juntar as tabelas. Se o indicador mede ordens, preserve uma linha por ordem.</p>
+          <a class="code-link" href="https://github.com/russoaugusto/portfolio-dados-operacionais/blob/main/sql/granularidade.sql">Ler a consulta de granularidade <span aria-hidden="true">↗</span></a>
+        </section>
+
+        <section class="case case-card" id="bi" aria-labelledby="bi-titulo">
+          <header class="case-header">
+            <p class="eyebrow"><span class="case-number">03</span> BUSINESS INTELLIGENCE</p>
+            <h2 id="bi-titulo">O horário de corte muda a leitura?</h2>
+            <p>Compare duas segundas-feiras pela mesma janela de tempo antes de interpretar uma diferença no volume.</p>
+          </header>
+          <div class="data-region" hidden>
+            <dl class="stats compact-stats" id="cutoff-stats"></dl>
+            <div class="table-wrap">
+              <table id="cutoff-table">
+                <caption class="sr-only">Volumes no mesmo horário de corte e no dia inteiro</caption>
+                <thead><tr><th scope="col">Dia</th><th scope="col">Corte</th><th scope="col">Até o corte</th><th scope="col">Total diário</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <p class="method"><strong>Método.</strong> Para acompanhar um dia em andamento, compare-o com o volume histórico observado até a mesma hora. Use o total diário quando os dois dias estiverem fechados.</p>
+          <a class="code-link" href="https://github.com/russoaugusto/portfolio-dados-operacionais/blob/main/sql/horario-de-corte.sql">Ler a consulta de horário de corte <span aria-hidden="true">↗</span></a>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div><strong>@russoaugusto</strong><p>SQL, BI e planejamento operacional</p></div>
+      <a href="https://github.com/russoaugusto/portfolio-dados-operacionais">Código e dados no GitHub <span aria-hidden="true">↗</span></a>
+    </div>
+  </footer>
+</body>
+</html>
