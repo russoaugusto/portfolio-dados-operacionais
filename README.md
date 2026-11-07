@@ -7,6 +7,7 @@ Cases demonstrativos de SQL, BI, planejamento operacional e segurança cibernét
 | Capacidade e fila | Em quais dias a equipe precisa de mais capacidade? | Separa demanda, capacidade, volume concluído e saldo em fila ao longo da semana. |
 | Granularidade no SQL | Por que a contagem muda depois de um `JOIN`? | Mostra como várias atualizações de um mesmo chamado multiplicam as linhas da junção. |
 | Comparação por horário de corte | Como comparar um dia em andamento com outro dia? | Compara volumes acumulados no mesmo horário e mostra o total diário para dar contexto. |
+| Checklist de validação | O que conferir antes de confiar no dashboard? | Reúne verificações de granularidade, chaves, recortes e cobertura dos dados. |
 
 ## Reproduzir
 
