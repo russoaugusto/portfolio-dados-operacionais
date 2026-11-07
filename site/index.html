@@ -18,6 +18,7 @@
         <a href="#capacidade">Capacidade</a>
         <a href="#sql">SQL</a>
         <a href="#bi">BI</a>
+        <a href="#validacoes">Validação</a>
         <a href="#novos-cases">Novos cases</a>
       </nav>
     </div>
@@ -120,6 +121,21 @@
           <a class="code-link" href="https://github.com/russoaugusto/portfolio-dados-operacionais/blob/main/sql/horario-de-corte.sql">Ler a consulta de horário de corte <span aria-hidden="true">↗</span></a>
         </section>
       </div>
+      <section class="case case-card validation-section" id="validacoes" aria-labelledby="validacoes-titulo">
+        <header class="case-header">
+          <p class="eyebrow">04 · QUALIDADE DOS DADOS</p>
+          <h2 id="validacoes-titulo">Antes do dashboard: quatro validações</h2>
+          <p>O indicador precisa ter um significado verificável antes de orientar uma decisão.</p>
+        </header>
+        <ol class="validation-list">
+          <li><strong>Definir a unidade.</strong> Cada linha representa uma solicitação, um evento ou uma pessoa? A contagem precisa respeitar essa granularidade.</li>
+          <li><strong>Conferir as chaves.</strong> Após cada <code>JOIN</code>, comparar o número de registros e identificar duplicações inesperadas.</li>
+          <li><strong>Igualar o recorte.</strong> Comparar períodos equivalentes, com o mesmo horário de corte e os mesmos critérios de seleção.</li>
+          <li><strong>Mostrar limites.</strong> Explicitar valores ausentes, atualização da base e cobertura do indicador antes de concluir.</li>
+        </ol>
+        <p class="method"><strong>Aplicação.</strong> Use os três estudos acima como exercícios: granularidade em SQL, comparação no BI e consistência de demanda versus capacidade.</p>
+      </section>
+
       <section class="case-series" id="novos-cases" aria-labelledby="novos-cases-titulo">
         <header class="case-header">
           <p class="eyebrow">SÉRIE MENSAL</p>
