@@ -1,0 +1,28 @@
+name: Validar estudos do portfólio
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Validar estudos SQL e datas da série
+        run: |
+          python3 novos_cases.py
+          python3 build_data.py
+      - name: Validar site e dados gerados
+        run: |
+          node --check site/app.js
+          python3 -m json.tool site/data.json > /dev/null
+          test -s site/index.html
+          test -s site/styles.css
