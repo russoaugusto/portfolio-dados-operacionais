@@ -1,0 +1,2 @@
+# Este projeto usa somente a biblioteca padrão do Python (runtime).
+# Não adicione dependências sem atualizar CI, auditoria de vulnerabilidades e documentação.
