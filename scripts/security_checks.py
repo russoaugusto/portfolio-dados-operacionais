@@ -5,17 +5,15 @@ Ferramenta complementar, NÃO substitui scanners especializados ou revisão huma
 import ast
 import re
 import subprocess
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CANDIDATE_SUFFIXES = {".py", ".js", ".html", ".css", ".sql", ".md", ".yml", ".yaml", ".json", ".txt"}
 RUNTIME_DEPENDENCIES = ROOT / "requirements.txt"
-KNOWN_EXTERNAL_IMPORTS = set()
 # Prefixos fragmentados para não sinalizar o próprio scanner como uma credencial.
 SENSITIVE_PREFIXES = ("gh" + "p_", "gh" + "o_", "sk" + "-", "glpat" + "-")
 ASSIGNMENT = re.compile(
-    r"(?im)^\\s*(?:password|api[_-]?key|access[_-]?token|client[_-]?secret)\\s*[:=]\\s*['\\\"]?([A-Za-z0-9_./+=\\-]{16,})"
+    r"(?im)^\s*(?:password|api[_-]?key|access[_-]?token|client[_-]?secret)\s*[:=]\s*['\"]?([A-Za-z0-9_./+=-]{16,})"
 )
 PRIVATE_KEY = "BEGIN " + "PRIVATE KEY"
 ALLOWED_IMPORTS = {
@@ -33,7 +31,7 @@ def tracked_paths():
             capture_output=True, text=True,
         )
         return [
-            ROOT / path for path in proc.stdout.split("\\x00")
+            ROOT / path for path in proc.stdout.split("\x00")
             if path and Path(path).suffix.lower() in CANDIDATE_SUFFIXES
         ]
     except (OSError, subprocess.CalledProcessError):
@@ -86,7 +84,7 @@ def validate():
                     errors.append(f"{file.relative_to(ROOT)}: execução dinâmica não permitida: {node.func.id}")
 
     if errors:
-        raise SystemExit("\\n".join(errors))
+        raise SystemExit("\n".join(errors))
     print("Verificação estática concluída: nenhuma dependência externa de runtime; "
           "nenhuma credencial óbvia ou import não aprovado detectado.")
 
