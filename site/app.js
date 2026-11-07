@@ -212,7 +212,7 @@ function caseCard(study) {
     article.append(link);
     const details = document.createElement("a");
     details.className = "code-link";
-    const slug = study.sql.split("/").at(-1).replace(/\\.sql$/, "");
+    const slug = study.sql.split("/").at(-1).replace(/\.sql$/, "");
     details.href = "https://github.com/russoaugusto/portfolio-dados-operacionais/blob/main/docs/cases/" + slug + ".md";
     details.textContent = "Metodologia e evidências do case";
     details.setAttribute("aria-label", "Abrir documentação de " + study.title);
