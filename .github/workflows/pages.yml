@@ -29,6 +29,11 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
+      - name: Validar testes, dependências e segurança do código
+        run: |
+          python3 -m unittest discover -v
+          python3 scripts/security_checks.py
+          python3 -m compileall -q build_data.py novos_cases.py test_portfolio.py scripts
       - name: Validar a série e gerar os cases disponíveis
         run: |
           python3 novos_cases.py
