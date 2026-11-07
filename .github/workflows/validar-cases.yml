@@ -3,24 +3,32 @@ name: Validar estudos do portfólio
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  validar:
+  qualidade-e-seguranca:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Obter código sem persistir credenciais
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
-      - name: Validar estudos SQL e datas da série
+      - name: Verificação estática de Python
+        run: python3 -m compileall -q build_data.py novos_cases.py test_portfolio.py scripts
+      - name: Testes Python, indicadores e SQL
         run: |
+          python3 -m unittest discover -v
           python3 novos_cases.py
           python3 build_data.py
-      - name: Validar site e dados gerados
+      - name: Dependências e busca preventiva por segredos
+        run: python3 scripts/security_checks.py
+      - name: Verificar frontend e JSON publicado
         run: |
           node --check site/app.js
           python3 -m json.tool site/data.json > /dev/null
