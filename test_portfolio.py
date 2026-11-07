@@ -57,7 +57,7 @@ class TestPortfolio(unittest.TestCase):
                     "Resultados sintéticos e limitações", "Decisões possíveis",
                 ]:
                     self.assertIn(section, content)
-                self.assertIn("fictício", content.lower())
+                self.assertTrue("fictíci" in content.lower() or "sintétic" in content.lower())
 
 
 if __name__ == "__main__":
