@@ -31,6 +31,12 @@ Os cinco dias fictícios permitem comparar demanda, capacidade e fila de fechame
 
 Reavaliar distribuição de recursos por período, sem tratar o saldo semanal como capacidade instantaneamente transferível.
 
+## Testar com sua planilha
+
+A calculadora aplica a mesma lógica de saldo ao histórico diário de um `.xlsx` ou `.csv`. A fila de fechamento é a fila inicial mais entradas menos conclusões. No cenário futuro, as conclusões são limitadas pela capacidade informada e pelo volume disponível. O prazo, a demanda prevista e os dias de operação são premissas escolhidas por quem usa a ferramenta.
+
+O arquivo é lido no navegador. Para experimentar de imediato, use o exemplo fictício integrado. [Abrir a calculadora](https://russoaugusto.github.io/portfolio-dados-operacionais/fila/)
+
 ## Evidências públicas
 
 - [Código e validação](https://github.com/russoaugusto/portfolio-dados-operacionais/blob/main/sql/capacidade.sql)

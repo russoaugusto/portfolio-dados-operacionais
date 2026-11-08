@@ -1,0 +1,9 @@
+SheetJS Community Edition 0.20.3
+Copyright (C) 2012-present SheetJS LLC
+
+xlsx.mini.min.js is the unmodified standalone browser build from SheetJS.
+Source: https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js
+Release archive: https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz
+SHA-256: 0cb353f830d7288385492c83d277b058ddeac664ca51cf1393aa1fd3e2b70939
+
+Licensed under the Apache License, Version 2.0. See LICENSE.

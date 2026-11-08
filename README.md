@@ -4,9 +4,9 @@
 
 Atuação profissional em planejamento de operações de cobrança, com foco de estudo em análise e engenharia de dados, SQL, automação, Business Intelligence e segurança da informação.
 
-**[Explorar o painel interativo](https://russoaugusto.github.io/portfolio-dados-operacionais/)** · **[Competências e evidências](docs/competencias.md)** · **[Modelo de apresentação do perfil](docs/PERFIL_GITHUB.md)**
+**[Explorar o painel interativo](https://russoaugusto.github.io/portfolio-dados-operacionais/)** · **[Abrir a calculadora de fila](https://russoaugusto.github.io/portfolio-dados-operacionais/fila/)** · **[Competências e evidências](docs/competencias.md)** · **[Modelo de apresentação do perfil](docs/PERFIL_GITHUB.md)**
 
-> **Transparência:** este é um portfólio técnico pessoal. Os datasets, exemplos, números e resultados são totalmente fictícios. Não representam dados, código, resultados mensurados ou entregas internas da VGX, da Claro ou de clientes; não há endosso das empresas.
+> **Transparência:** este é um portfólio técnico pessoal. As bases, os exemplos e os resultados publicados são fictícios. Não representam dados, código, resultados mensurados ou entregas internas da VGX, da Claro ou de clientes; não há endosso das empresas.
 
 ## Tecnologias e práticas demonstradas
 
@@ -15,6 +15,14 @@ Atuação profissional em planejamento de operações de cobrança, com foco de 
 - **JavaScript / HTML / CSS:** painel responsivo publicado pelo GitHub Pages.
 - **GitHub Actions / Git:** CI para testes, checagens estáticas, auditoria de fontes e implantação do site.
 - **Segurança de dados:** menor privilégio, proteção contra exposição de segredos e revisão fictícia de permissões.
+
+## Calculadora de fila para planilhas
+
+Use o exemplo fictício ou abra um arquivo `.xlsx` ou `.csv` com uma linha por dia. No Excel, escolha a aba. Indique a linha do cabeçalho, associe as colunas de data, entradas e conclusões e informe a fila inicial para validar o histórico e calcular a fila de fechamento.
+
+Com o histórico conferido, informe a demanda esperada, a capacidade diária e a data-limite. A calculadora projeta a fila, mostra quando ela zeraria dentro do prazo e estima o volume diário de conclusões necessário. A simulação permite considerar apenas dias úteis (segunda a sexta).
+
+O arquivo e os cálculos ficam no dispositivo. A leitura de Excel usa SheetJS CE 0.20.3, distribuído localmente com sua licença Apache 2.0. [Experimentar a calculadora](https://russoaugusto.github.io/portfolio-dados-operacionais/fila/)
 
 ## Cases atualmente disponíveis
 
@@ -38,7 +46,7 @@ Os códigos e testes de estudos futuros já estão versionados; a **exibição n
 
 ## Executar e validar
 
-Pré-requisitos: **Python 3.10+**, um navegador e, para verificar a sintaxe do frontend, **Node.js**. Os scripts de produção utilizam apenas a biblioteca padrão do Python; não é necessário baixar bases reais nem instalar dependências externas de execução.
+Pré-requisitos: **Python 3.10+**, um navegador e **Node.js** para os testes e as verificações do frontend. Os scripts Python usam apenas a biblioteca padrão.
 
 ```bash
 python3 -m unittest discover -v
@@ -46,6 +54,8 @@ python3 scripts/security_checks.py
 python3 -m compileall -q build_data.py novos_cases.py test_portfolio.py scripts
 python3 build_data.py
 node --check site/app.js
+node --check site/fila/app.mjs
+node --test tests/fila*.test.mjs
 python3 -m http.server 8000 --directory site
 ```
 
@@ -56,7 +66,7 @@ Abra `http://localhost:8000`. A saída `site/data.json` é gerada localmente a p
 - O workflow [Validar estudos do portfólio](.github/workflows/validar-cases.yml) testa os scripts e checks estáticos em pull requests.
 - O workflow [Atualizar painel do portfólio](.github/workflows/pages.yml) valida o build antes de publicar no GitHub Pages.
 - O scanner local procura padrões típicos de credenciais, construções Python inseguras e imports não aprovados. **Não substitui auditoria especializada, SAST completo ou inspeção humana.**
-- A verificação de dependências garante que o runtime não inclua bibliotecas externas no manifesto `requirements.txt`; se alguma biblioteca for introduzida, a atualização deve incluir auditoria de vulnerabilidades e travas de versão antes do merge.
+- O verificador de dependências cobre o manifesto `requirements.txt` dos scripts Python. A biblioteca de leitura de Excel é distribuída com a versão fixada no frontend.
 
 ## Evolução e vínculo com o currículo
 

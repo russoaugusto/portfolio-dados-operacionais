@@ -8,7 +8,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CANDIDATE_SUFFIXES = {".py", ".js", ".html", ".css", ".sql", ".md", ".yml", ".yaml", ".json", ".txt"}
+CANDIDATE_SUFFIXES = {".py", ".js", ".mjs", ".html", ".css", ".sql", ".md", ".yml", ".yaml", ".json", ".txt"}
 RUNTIME_DEPENDENCIES = ROOT / "requirements.txt"
 # Prefixos fragmentados para não sinalizar o próprio scanner como uma credencial.
 SENSITIVE_PREFIXES = ("gh" + "p_", "gh" + "o_", "sk" + "-", "glpat" + "-")
@@ -85,7 +85,7 @@ def validate():
 
     if errors:
         raise SystemExit("\n".join(errors))
-    print("Verificação estática concluída: nenhuma dependência externa de runtime; "
+    print("Verificação estática concluída: nenhuma dependência externa no manifesto Python; "
           "nenhuma credencial óbvia ou import não aprovado detectado.")
 
 

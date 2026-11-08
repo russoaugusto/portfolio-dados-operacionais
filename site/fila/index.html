@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Acompanhe a fila de trabalho a partir de uma planilha e simule a capacidade necessária para cumprir um prazo.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Calculadora de fila | Portfólio de Dados</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="fila.css">
+  <script src="vendor/xlsx.mini.min.js" defer></script>
+  <script type="module" src="app.mjs"></script>
+</head>
+<body class="queue-app">
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="wordmark" href="../"><span aria-hidden="true">SQL</span> @russoaugusto</a>
+      <nav aria-label="Navegação">
+        <a href="../#capacidade">Estudo de capacidade e fila</a>
+        <a href="https://github.com/russoaugusto/portfolio-dados-operacionais/tree/main/site/fila">Código no GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero" aria-labelledby="titulo">
+      <div class="shell queue-hero">
+        <p class="eyebrow">PLANEJAMENTO OPERACIONAL</p>
+        <h1 id="titulo">Calculadora de fila</h1>
+        <p class="hero-summary">Veja como a fila mudou dia a dia e calcule quantas demandas sua equipe precisaria concluir para zerá-la até a data escolhida.</p>
+        <div class="hero-actions">
+          <button type="button" class="primary-link" id="example">Testar com exemplo <span aria-hidden="true">↓</span></button>
+          <button type="button" class="primary-link outline-button" id="choose-file" aria-describedby="privacy">Usar minha planilha <span aria-hidden="true">↑</span></button>
+          <input type="file" id="file" accept=".xlsx,.csv" hidden>
+        </div>
+        <p class="privacy" id="privacy">Excel (.xlsx) ou CSV, até 5 MB. Os dados do arquivo são processados no seu navegador.</p>
+      </div>
+    </section>
+
+    <div class="shell queue-content">
+      <p id="source-status" class="status" role="status" hidden></p>
+      <noscript><p class="status">Ative o JavaScript para abrir uma planilha e usar a calculadora.</p></noscript>
+
+      <section class="case-card queue-intro" id="intro" aria-labelledby="intro-title">
+        <div>
+          <p class="eyebrow">PREPARE SUA PLANILHA</p>
+          <h2 id="intro-title">Uma linha por dia</h2>
+          <p class="field-note">Use os totais diários de entradas e conclusões. Separe também o saldo da fila antes do primeiro dia registrado.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Formato ilustrativo da planilha</caption>
+            <thead><tr><th scope="col">Data</th><th scope="col">Entradas</th><th scope="col">Conclusões</th></tr></thead>
+            <tbody>
+              <tr><td>19/10/2026</td><td>120</td><td>100</td></tr>
+              <tr><td>20/10/2026</td><td>110</td><td>105</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="case-card queue-step" id="mapping" aria-labelledby="mapping-title" hidden>
+        <header class="case-header">
+          <p class="eyebrow">01 · PREPARAÇÃO</p>
+          <h2 id="mapping-title" tabindex="-1">Identifique os dados</h2>
+          <p id="source-name"></p>
+        </header>
+        <form id="history-form">
+          <div class="form-grid">
+            <label id="sheet-field" hidden>Aba <select id="sheet"></select></label>
+            <label>Linha do cabeçalho <input id="header-row" type="number" inputmode="numeric" min="1" step="1" required></label>
+            <label>Fila antes do primeiro dia <input id="opening" type="number" inputmode="numeric" min="0" step="1" required placeholder="Informe o saldo"></label>
+          </div>
+          <div class="form-grid">
+            <label>Coluna de data <select id="date-col" required></select></label>
+            <label>Coluna de entradas <select id="arrivals-col" required></select></label>
+            <label>Coluna de conclusões <select id="completed-col" required></select></label>
+          </div>
+          <p class="field-note">Use datas no formato DD/MM/AAAA ou AAAA-MM-DD e quantidades inteiras a partir de zero. Datas formatadas como data no Excel também são aceitas.</p>
+          <button class="queue-button" type="submit">Analisar histórico</button>
+          <div id="history-errors" class="notice notice-error" role="alert" hidden></div>
+        </form>
+      </section>
+
+      <section class="case-card queue-step" id="history" aria-labelledby="history-title" hidden>
+        <header class="case-header">
+          <p class="eyebrow">02 · HISTÓRICO</p>
+          <h2 id="history-title" tabindex="-1">Como a fila evoluiu</h2>
+          <p id="history-period"></p>
+        </header>
+        <div id="history-warnings" class="notice notice-warning" role="status" hidden></div>
+        <dl class="stats queue-stats" id="history-stats"></dl>
+        <figure class="queue-figure">
+          <h3>Fila no fim de cada dia informado</h3>
+          <div id="history-chart" class="queue-chart" aria-hidden="true"></div>
+          <figcaption id="history-insight"></figcaption>
+        </figure>
+        <details class="table-panel" id="history-details">
+          <summary>Conferir o cálculo por dia</summary>
+          <div class="table-wrap" tabindex="0" role="region" aria-label="Tabela do histórico">
+            <table>
+              <caption class="sr-only">Histórico da fila por data</caption>
+              <thead><tr><th scope="col">Data</th><th scope="col">Fila inicial</th><th scope="col">Entradas</th><th scope="col">Concluídas</th><th scope="col">Fila final</th><th scope="col">Variação</th></tr></thead>
+              <tbody id="history-rows"></tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section class="case-card queue-step" id="scenario" aria-labelledby="scenario-title" hidden>
+        <header class="case-header">
+          <p class="eyebrow">03 · SIMULAÇÃO</p>
+          <h2 id="scenario-title">A capacidade dá conta do prazo?</h2>
+          <p id="scenario-start"></p>
+        </header>
+        <form id="scenario-form">
+          <div class="form-grid">
+            <label>Entradas esperadas por dia <input id="daily-arrivals" type="number" inputmode="numeric" min="0" step="1" required></label>
+            <label>Capacidade de conclusão por dia <input id="daily-capacity" type="number" inputmode="numeric" min="0" step="1" required></label>
+            <label>Data-limite <input id="deadline" type="date" required></label>
+          </div>
+          <label class="checkbox"><input id="weekdays" type="checkbox"> Considerar movimento apenas de segunda a sexta</label>
+          <p id="arrivals-note" class="field-note" hidden>A estimativa de entradas começa pela média arredondada dos dias informados. Você pode ajustá-la.</p>
+          <p class="field-note">O cenário mantém a demanda e a capacidade constantes. Na opção de segunda a sexta, feriados em dias úteis entram no cálculo.</p>
+          <button class="queue-button" type="submit">Simular prazo</button>
+          <div id="scenario-error" class="notice notice-error" role="alert" hidden></div>
+        </form>
+        <div id="projection" class="projection" hidden>
+          <p id="projection-finding" class="notice" role="status"></p>
+          <dl class="stats queue-stats" id="projection-stats"></dl>
+          <figure class="queue-figure">
+            <h3>Fila projetada no fim do dia</h3>
+            <div id="projection-chart" class="queue-chart" aria-hidden="true"></div>
+          </figure>
+          <details class="table-panel" id="projection-details">
+            <summary>Conferir a simulação por dia</summary>
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Tabela da simulação">
+              <table>
+                <caption class="sr-only">Projeção da fila por data</caption>
+                <thead><tr><th scope="col">Data</th><th scope="col">Fila inicial</th><th scope="col">Entradas</th><th scope="col">Conclusões simuladas</th><th scope="col">Fila final</th></tr></thead>
+                <tbody id="projection-rows"></tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <p class="method"><strong>Como a conta funciona.</strong> Fila final = fila inicial + entradas − conclusões. Na simulação, as conclusões de cada dia ficam limitadas pela capacidade informada e pelo total disponível na fila.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div><strong>@russoaugusto</strong><p>SQL, BI e planejamento operacional</p></div>
+      <a href="../">Voltar ao portfólio ↗</a>
+    </div>
+  </footer>
+</body>
+</html>
