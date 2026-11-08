@@ -41,6 +41,8 @@ jobs:
       - name: Validar o painel
         run: |
           node --check site/app.js
+          node --check site/fila/app.mjs
+          node --test tests/fila*.test.mjs
           python3 -m json.tool site/data.json > /dev/null
           test -s site/index.html
           test -s site/styles.css
