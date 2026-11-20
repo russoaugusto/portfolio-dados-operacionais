@@ -93,6 +93,27 @@ CASES = (
             {"key": "saldo_min", "label": "Saldo (min)"},
         ],
     },
+    {
+        "slug": "deduplicacao-eventos",
+        "title": "Qual versão de um evento deve alimentar o indicador?",
+        "topic": "Qualidade de dados",
+        "date": "2027-04-01",
+        "question": (
+            "Como deduplicar eventos reprocessados sem escolha ambígua "
+            "quando os timestamps de ingestão empatam?"
+        ),
+        "interpretation": (
+            "Sete versões fictícias representam quatro eventos únicos; três "
+            "duplicatas são descartadas. No empate de E02, prevalece a "
+            "carga 4, com valor canônico 25."
+        ),
+        "columns": [
+            {"key": "evento", "label": "Evento fictício"},
+            {"key": "valor_canonico", "label": "Valor canônico"},
+            {"key": "versoes", "label": "Versões recebidas"},
+            {"key": "duplicatas_descartadas", "label": "Duplicatas descartadas"},
+        ],
+    },
 )
 
 
@@ -140,6 +161,13 @@ def validate_cases() -> None:
     if [row["taxa_pct"] for row in rates if row["tipo"] == "Total"] != [87, 71]:
         raise ValueError("Taxas totais divergentes")
 
+    duplicates = by_slug["deduplicacao-eventos"]
+    if (len(duplicates) != 4 or
+            sum(row["versoes"] for row in duplicates) != 7 or
+            sum(row["duplicatas_descartadas"] for row in duplicates) != 3 or
+            duplicates[1]["valor_canonico"] != 25):
+        raise ValueError("Deduplicação fictícia divergente")
+
     capacity = by_slug["capacidade-por-turno"]
     if [row["saldo_min"] for row in capacity] != [54, -72, 36, 54]:
         raise ValueError("Saldos de capacidade divergentes")
@@ -150,6 +178,7 @@ def validate_cases() -> None:
         (date(2027, 1, 1), 2),
         (date(2027, 2, 1), 3),
         (date(2027, 3, 1), 4),
+        (date(2027, 4, 1), 5),
     ]
     for cutoff, expected in limits:
         if len(released_cases(cutoff)) != expected:
