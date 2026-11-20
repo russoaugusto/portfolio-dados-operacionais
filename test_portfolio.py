@@ -39,9 +39,23 @@ class TestPortfolio(unittest.TestCase):
 
     def test_serie_mensal(self):
         validate_cases()
-        final = build_data(as_of=date(2027, 3, 1))
+        final = build_data(as_of=date(2027, 4, 1))
         self.assertEqual(len(final["new_cases"]), len(CASES))
         self.assertTrue(all(case["rows"] for case in final["new_cases"]))
+
+    def test_deduplicacao_eventos_e_data_de_liberacao(self):
+        from novos_cases import released_cases
+        previous = released_cases(date(2027, 3, 31))
+        self.assertNotIn("deduplicacao-eventos", {c["slug"] for c in previous})
+        current = released_cases(date(2027, 4, 1))
+        cases = [c for c in current if c["slug"] == "deduplicacao-eventos"]
+        self.assertEqual(len(cases), 1)
+        rows = cases[0]["rows"]
+        self.assertEqual([r["evento"] for r in rows], ["E01", "E02", "E03", "E04"])
+        self.assertEqual(sum(r["versoes"] for r in rows), 7)
+        self.assertEqual(sum(r["duplicatas_descartadas"] for r in rows), 3)
+        self.assertEqual(rows[1]["valor_canonico"], 25)
+        self.assertEqual(len({r["evento"] for r in rows}), len(rows))
 
     def test_documentacao_para_todos_os_cases(self):
         paths = ["capacidade", "granularidade", "horario-de-corte"]
