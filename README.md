@@ -43,6 +43,7 @@ Os códigos e testes de estudos futuros já estão versionados; a **exibição n
 | 01/01/2027 | Reconstrução de fila no horário de corte | [Snapshot temporal](docs/cases/fila-na-data-de-corte.md) |
 | 01/02/2027 | Taxa agregada e mix de demanda | [Composição de indicadores](docs/cases/taxa-no-prazo.md) |
 | 01/03/2027 | Capacidade por turno | [Análise por faixa horária](docs/cases/capacidade-por-turno.md) |
+| 01/04/2027 | Deduplicação determinística de eventos | [Qualidade de ingestão](docs/cases/deduplicacao-eventos.md) |
 
 ## Executar e validar
 
