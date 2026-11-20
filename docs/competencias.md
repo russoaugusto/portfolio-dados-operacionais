@@ -8,6 +8,7 @@ Este quadro relaciona habilidades demonstradas em repositórios públicos e **n�
 | Granularidade e JOIN | [Consulta SQL](../sql/granularidade.sql) | [Case](cases/granularidade.md) e teste de cardinalidade | Simulação |
 | BI e comparação temporal | [Consulta SQL](../sql/horario-de-corte.sql) | [Case](cases/horario-de-corte.md) e comparações por corte | Simulação |
 | Segurança de acessos | [Matriz de permissões](../sql/novos/acessos-fora-do-perfil.sql) | [Case programado](cases/acessos-fora-do-perfil.md), `novos_cases.validate_cases` | Simulação (lançamento 01/12/2026) |
+| Qualidade de dados e deduplicação | [SQL de eventos fictícios](../sql/novos/deduplicacao-eventos.sql) | [Case programado para 01/04/2027](cases/deduplicacao-eventos.md), testes de precedência e unicidade em `test_portfolio.py` | Simulação; ainda não disponível no painel |
 | Python e validação | [Gerador de dados](../build_data.py) e [testes](../test_portfolio.py) | GitHub Actions e execução local | Código reproduzível |
 | Integração web | [Código do painel](../site/app.js) | [Demonstração](https://russoaugusto.github.io/portfolio-dados-operacionais/) | Projeto demonstrativo |
 | DevSecOps / CI | [Workflow de validação](../.github/workflows/validar-cases.yml) | Testes, verificações estáticas e checagem de segredos | Automação deste repositório |
